@@ -14,12 +14,12 @@ fetch("https://jsonplaceholder.typicode.com/users")
     });
 
 //  функція для виводу користувачів
-function renderUsers(users) {
+function renderUsers(users, query = "") {
     userList.innerHTML = "";
     users.forEach(user => {
         const li = document.createElement("li");
         li.innerHTML = `
-            <strong>${user.name}</strong><br>
+            <strong>${highlight(user.name, query)}</strong><br>
             ✉️ ${user.email}<br>
         `;
         userList.appendChild(li);
@@ -30,7 +30,7 @@ function renderUsers(users) {
 function filterUsers(query) {
     query = query.toLowerCase().trim();
     const filtered = allUsers.filter(user => user.name.toLowerCase().includes(query));
-    renderUsers(filtered);
+    renderUsers(filtered, query);
 }
 
 function isMobile() {
@@ -50,3 +50,9 @@ searchBtn.addEventListener("click", () => {
         filterUsers(searchInput.value);
     }
 });
+
+function highlight(text, query) {
+    if (!query) return text;
+    const regex = new RegExp(`(${query})`, 'gi');
+    return text.replace(regex, '<mark>$1</mark>');
+}
